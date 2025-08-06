@@ -134,6 +134,9 @@ function SelectedParty() {
   `;
   $party.querySelector("GuestList").replaceWith(GuestList());
 
+  const $delete = $party.querySelector("button");
+  $delete.addEventListener("click", () => partyDelete(selectedParty.id));
+
   return $party;
 }
 
@@ -162,13 +165,14 @@ function newPartyForm() {
   // TODO: add event listener to add a party
   $form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const newParty = {
-      name: e.target[0].value,
-      description: e.target[1].value,
-      date: e.target[2].value,
-      location: e.target[3].value,
-    };
-    addParty(newParty);
+    const data = new FormData($form);
+    const date = new Date(data.get("date")).toISOString();
+    addParty({
+      name: data.get("name"),
+      description: data.get("description"),
+      date,
+      location: data.get("location"),
+    });
   });
   return $form;
 }
